@@ -1,0 +1,6 @@
+# dsh-recent-sessions bundle patch: one host row; the browser half ships in
+# ./client.js. The row name must match the published package name so the
+# profile can resolve it from its node_modules.
+- insert:
+    - id: recent-sessions
+      name: '@todrink/dsh-recents'

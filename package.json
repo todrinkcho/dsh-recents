@@ -1,0 +1,63 @@
+{
+  "name": "@todrink/dsh-recents",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Show the three most recently touched conversations as mirror shortcuts between the New session button and the Workspaces list.",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18",
+    "dsh": ">=0.2.2-rc.5"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "sidebar",
+    "sessions",
+    "shortcut",
+    "recent",
+    "ui"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "todrink",
+    "url": "https://github.com/todrinkcho"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/todrinkcho/dsh-recents.git"
+  },
+  "homepage": "https://github.com/todrinkcho/dsh-recents#readme",
+  "bugs": {
+    "url": "https://github.com/todrinkcho/dsh-recents/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-api-workspace-controller",
+        "@deepseek-ai/dsh-api-session-controller"
+      ]
+    }
+  }
+}

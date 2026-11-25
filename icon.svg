@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Recent conversations">
+  <rect x="4" y="6" width="40" height="36" rx="8" fill="#f2f4f8" stroke="#c9d2e0" stroke-width="2"/>
+  <rect x="10" y="13" width="28" height="5" rx="2.5" fill="#4a5a75"/>
+  <rect x="10" y="22" width="20" height="5" rx="2.5" fill="#8b99ae"/>
+  <path d="M14 34.5 L20 34.5 M24 34.5 L30 34.5 M34 34.5 L34 34.5" stroke="#8b99ae" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="34" cy="9" r="7.5" fill="#4a5a75"/>
+  <path d="M34 5.6 V9.2 L36.4 10.7" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
