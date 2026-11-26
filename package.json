@@ -1,6 +1,6 @@
 {
   "name": "@todrink/dsh-recents",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "Show the three most recently touched conversations as mirror shortcuts between the New session button and the Workspaces list.",
   "exports": {
