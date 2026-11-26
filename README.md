@@ -30,11 +30,11 @@
 
 ## 为什么是插入 DOM 而不是注册 slot
 
-侧栏在「新会话」和「工作区」之间 **没有 slot**；而 `sidebar.workspaces` 是 `single` slot，整个浏览区归宿主或 `@local/sidebar-fold` 所有。所以本模块把一个容器插进侧栏列：
+侧栏在「新会话」和「工作区」之间 **没有 slot**；而 `sidebar.workspaces` 是 `single` slot，整个浏览区归宿主或接管该 slot 的侧栏折叠类插件所有。所以本模块把一个容器插进侧栏列：
 
 ```
 sidebar root (flex column)
-├─ logoRow            (被 topbar-nav 压成 0 高)
+├─ logoRow            (可能被顶栏类插件压成 0 高)
 ├─ newSessionRow      ← 新会话
 ├─ [data-rs-list]     ← 本插件插在这里
 └─ scrollRegion       ← 工作区（含标题、树、滚动）
@@ -47,25 +47,20 @@ sidebar root (flex column)
 
 ## 已知坑（踩过一次）
 
-`client.js` 被模块加载器当成 **经典脚本**注入到同一作用域，所以**顶层不能有 `const`/`let`/`function` 重名**——第一版顶层写了 `const STYLE_ID`，和 `@local/topbar-nav` 的同名常量撞车，整模块报 `SyntaxError: Identifier 'STYLE_ID' has already been declared`，插件静默消失（`data-rs` 不出现、无块、无样式）。现在整个文件包在 IIFE 里。
+`client.js` 被模块加载器当成 **经典脚本**注入到同一作用域，所以**顶层不能有 `const`/`let`/`function` 重名**——只要同时装了另一个也改侧栏的插件，两边各写一个顶层 `const STYLE_ID` 就会整模块报 `SyntaxError: Identifier 'STYLE_ID' has already been declared`，插件静默消失（`data-rs` 不出现、无块、无样式）。现在整个文件包在 IIFE 里。
 
 同类注意：CSS 模板串注释里不要写反引号（会提前闭合字符串，老坑）。
 
-## 验证（2026-11-25，headless Edge，真实 1180×820 页面）
+## 验证要点
 
-`node tools/probe-recent.mjs <baseUrl> <token> <outPrefix>` 一次跑完：
+- 挂载：`data-rs` / `data-rs-list` / 样式节点都在，父节点是侧栏 root，前一个兄弟是 `newSessionRow`，后一个兄弟是 `scrollRegion`。
+- 镜像语义：三行内容与侧栏工作区树里的同一条会话一致；点击任一行都能跨工作区跳到该会话正文，该行出现 `aria-current="page"`。
+- 状态点：`data-rs-status` 取值 pending / done / running 时颜色与动画都来自宿主 token（不做硬编码）。
+- 折叠：宿主侧栏切到图标栏时 `data-rs-compact` 置位、整块隐藏；展开后恢复。
 
-- 挂载：`data-rs` / `data-rs-list` / 样式节点都在，父节点 = 侧栏 root，前一个兄弟 = `newSessionRow`，后一个兄弟 = `scrollRegion`，块盒 (8, 84, 264×138)。
-- 几何：head 左缘 20、行盒 x=8 宽 264、行高 32、标题 primary `rgb(15,17,21)`、时间 tertiary `rgb(129,133,140)`、字号 14px（与宿主会话行一致）。
-- 三行数据：`侧栏最近对话模块开发适配 / 9分钟`、`手机端安装项目文件夹插件 / 23分钟`、`【当前时间】… / 1小时`，与侧栏树内同一条会话一致（镜像语义成立）。
-- 状态点：动态打 `data-rs-status` 后取值 pending `rgb(245,158,11)`、done `rgb(34,197,94)`、running `rgb(65,118,230)` + `rs-pulse` 动画 → token 真实存在。
-- 点击：点第 3 行（属于另一个工作区的 qq-bridge 会话）→ 主视图切到该会话正文，该行 `aria-current="page"` 出现 → 跨工作区跳转成立。
-- 折叠：点宿主 toggle → `data-rs-compact` 置位、块 `display:none`；再展开 → `display:block`、3 行回来。
-- 全程 `consoleErrors: []`、`pageErrors: []`。
+未覆盖：hover 底色与 tooltip 的观感、暗色主题、空态（全是空白或归档会话时整块消失）。
 
-未验证：hover 底色与 tooltip（CSS 直白）、暗色主题、空态（全是空白/归档会话时整块消失）、运行中状态点与真实回合联动的观感。
+## 与其它改侧栏的插件共存
 
-## 与其它插件的关系
-
-- `@local/topbar-nav`：互不依赖。本块在侧栏列里随流排布，图标行是 `position: fixed`；折叠态两者各查各的 `[data-sidebar-collapsed]`。
-- `@local/sidebar-fold`：本块插在它外面，不碰它渲染的任何节点；「工作区树里同一会话照常出现」是刻意保留的重复。
+- 与顶栏导航类插件互不依赖：本块随流排在侧栏列里，图标行是 `position: fixed`；折叠态各自查各自的属性。
+- 与接管 `sidebar.workspaces` 的折叠类插件共存：本块插在它外面，不碰它渲染的任何节点；「工作区树里同一会话照常出现」是刻意保留的重复。

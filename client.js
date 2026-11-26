@@ -13,7 +13,7 @@
  * Why a hand-built block instead of a slot: the sidebar exposes no slot between
  * the New session row and the Workspaces region, and the region itself belongs
  * to whichever plugin owns `sidebar.workspaces` (the stock browser, or
- * @local/sidebar-fold). So this module injects one container into the sidebar
+ * a sidebar-folding plugin). So this module injects one container into the sidebar
  * column as a previous sibling of the workspaces subtree, and then leaves the
  * host's own React tree alone. The container is foreign to React, which keeps
  * its own children by identity; a MutationObserver re-places the container if a
