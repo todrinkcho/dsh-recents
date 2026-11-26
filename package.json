@@ -59,5 +59,9 @@
         "@deepseek-ai/dsh-api-session-controller"
       ]
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   }
 }
